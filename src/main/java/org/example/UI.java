@@ -7,21 +7,33 @@ import java.awt.event.*;
 public class UI extends JFrame implements MouseListener, KeyListener {
     Hero hero = new Hero();
     static boolean isWalk = false;
+    static AnotherHero anotherHero = new AnotherHero();
+
+
+
+    int anotherHeroX = anotherHero.getX() + anotherHero.getWidth() / 2;
+    int anotherHeroY = anotherHero.getY() + anotherHero.getHeight() / 2;
+
      UI() {
          setLayout(null);
-         setPreferredSize(new Dimension(400, 400));
+         setPreferredSize(new Dimension(600, 600));
+         setBackground(Color.WHITE);
 
-         hero.setBounds(0,0,140, 170);
+         hero.setBounds(100,400,140, 170);
+         anotherHero.setBounds(400,400,100,120);
 
          addMouseListener(this);
-
          addKeyListener(this);
          setFocusable(true);
          requestFocusInWindow();
 
+
          add(hero);
+         add(anotherHero);
+
          pack();
          setVisible(true);
+
     }
 
 

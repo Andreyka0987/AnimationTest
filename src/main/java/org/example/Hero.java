@@ -7,24 +7,28 @@ import java.awt.image.BufferedImage;
 public class Hero extends JLabel {
     MyThread walkThread = null;
 
-
     BufferedImage idle;
     BufferedImage hero;
     ImageIcon tempImage;
      int xStep = 110;
 
      // cords WH
-     int frameX = 158;
-     int frameY = 35;
+    static int frameX = 158;
+    static int frameY = 35;
      // WH img what i am upload
-     int frameWidth = 46;
-     int frameHeight = 85;
+    static int frameWidth = 46;
+    static int frameHeight = 85;
+
+    int posX = 100;
+    int posY = 400;
+
+    int speed = 10;
 
     Hero() {
         tempImage = new ImageIcon("src/main/resources/textures/original-d1e95a0c9c33c0f65821c2e7aa6c22d7.jpg");
         hero = toBufferedImage(tempImage);
 
-        setPreferredSize(new Dimension(140, 170));
+        setPreferredSize(new Dimension(100, 120));
 
 //        MyThread myThread = new MyThread();
 //        myThread.start();
@@ -84,6 +88,9 @@ public class Hero extends JLabel {
 
     public void walkAnimation(){
 
+
+
+
         if (walkThread != null)return;
 
         walkThread = new MyThread();
@@ -94,6 +101,8 @@ public class Hero extends JLabel {
             frameHeight = 85;
             UI.isWalk = true;
             walkThread.start();
+
+
     }
     public void stopWalkAnimation(){
         UI.isWalk = false;
@@ -133,13 +142,22 @@ public class Hero extends JLabel {
                try {
                    sleep(100);
 
-
+                    posX+=10;
                    frameX+=xStep;
+
+                   setLocation(posX,posY);
 
                    if (frameX>1024){
                        frameX=164;
                    }
                    repaint();
+
+                   if (Touch.isTouching(getX()+getWidth()/2,getY()+getHeight()/2,
+                           UI.anotherHero.getX()+UI.anotherHero.getWidth()/2,UI.anotherHero.getY()+UI.anotherHero.getHeight()/2,
+                           50)){
+                       System.out.println("Lovely Jably");
+                   }
+
 
                } catch (InterruptedException e) {
 
