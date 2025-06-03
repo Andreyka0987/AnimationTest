@@ -2,33 +2,42 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public class Hero extends JLabel {
     MyThread walkThread = null;
 
+    int[] Inner =
+            {1,2,3,
+            4,5,6};
+
     BufferedImage idle;
     BufferedImage hero;
     ImageIcon tempImage;
-     int xStep = 110;
+     int xStep = 32;
 
      // cords WH
-    static int frameX = 158;
-    static int frameY = 35;
+    static int frameX = 6;
+    static int frameY = 6;
      // WH img what i am upload
-    static int frameWidth = 46;
-    static int frameHeight = 85;
+    static int frameWidth = 17;
+    static int frameHeight = 22;
+
+    int countInner = 0;
+
+    int speed = 10;
 
     int posX = 100;
     int posY = 400;
 
-    int speed = 10;
+    boolean isBack = false;
 
     Hero() {
-        tempImage = new ImageIcon("src/main/resources/textures/original-d1e95a0c9c33c0f65821c2e7aa6c22d7.jpg");
+        tempImage = new ImageIcon("src/main/resources/textures/knight.png");
         hero = toBufferedImage(tempImage);
 
-        setPreferredSize(new Dimension(100, 120));
+        setPreferredSize(new Dimension(140, 170));
 
 //        MyThread myThread = new MyThread();
 //        myThread.start();
@@ -39,10 +48,24 @@ public class Hero extends JLabel {
         super.paintComponent(g);
         idle = hero.getSubimage(frameX, frameY, frameWidth, frameHeight);
         if (idle != null) {
-            g.drawImage(idle, 0,0 , getWidth(), getHeight(), null);
+            BufferedImage imageToDraw = isBack ? flipImageHorizontally(idle) : idle;
+                g.drawImage(imageToDraw, 0, 0, getWidth(), getHeight(), null);
+
+
         }
     }
 
+
+    public BufferedImage flipImageHorizontally(BufferedImage image) {
+        BufferedImage flipped = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = flipped.createGraphics();
+
+        g.transform(AffineTransform.getScaleInstance(-1, 1));
+        g.drawImage(image, -image.getWidth(), 0, null);
+
+        g.dispose();
+        return flipped;
+    }
 
     public static BufferedImage toBufferedImage(ImageIcon icon) {
         Image image = icon.getImage();
@@ -74,36 +97,50 @@ public class Hero extends JLabel {
         repaint();
     }
 
+    boolean isStanding = true;
     public void idleAnimation(){
-        frameX = 158;
-        frameY = 35;
-        frameWidth = 46;
-        frameHeight = 85;
-        frameX+=xStep;
-        if (frameX>1024){
-            frameX = 158;
-        }
+
+
+
+        frameX = 5;
+        frameY = 6;
+        frameWidth = 17;
+        frameHeight = 22;
+        isStanding = true;
+
+
         repaint();
     }
 
-    public void walkAnimation(){
-
-
-
-
+    public void walkAnimationRight(){
         if (walkThread != null)return;
-
         walkThread = new MyThread();
 
-            frameX = 164;
-            frameY = 290;
-            frameWidth = 41;
-            frameHeight = 85;
+            frameX = 5;
+            frameY = 71;
+            frameWidth = 18;
+            frameHeight = 21;
             UI.isWalk = true;
+            isBack = false;
             walkThread.start();
 
-
     }
+
+
+    public void walkAnimationLeft(){
+        if (walkThread != null)return;
+        walkThread = new MyThread();
+
+        frameX = 5;
+        frameY = 71;
+        frameWidth = 18;
+        frameHeight = 21;
+        UI.isWalk = true;
+        isBack = true;
+        walkThread.start();
+        repaint();
+    }
+
     public void stopWalkAnimation(){
         UI.isWalk = false;
 
@@ -112,21 +149,20 @@ public class Hero extends JLabel {
         }
 
         walkThread = null;
+
     }
+
     public void runAnimation(){
-        if (walkThread.isAlive() && frameY != 434){
-            frameX = 173;
-            frameY = 434;
-            frameWidth = 41;
-            frameHeight = 85;
+        if (speed != 20){
+            speed+=10;
         }
     }
     public void stopRunningAnimation(){
-        frameX = 164;
-        frameY = 290;
-        frameWidth = 41;
-        frameHeight = 85;
-        repaint();
+        if (speed != 10){
+            speed -= 10;
+            InnerThread innerThread = new InnerThread();
+            innerThread.start();
+        }
     }
 
 
@@ -140,23 +176,34 @@ public class Hero extends JLabel {
            super.run();
            while (UI.isWalk) {
                try {
-                   sleep(100);
+                   sleep(75);
 
-                    posX+=10;
-                   frameX+=xStep;
+                  if (!isBack) {
+                      posX += speed;
+                      frameX += xStep;
 
-                   setLocation(posX,posY);
+                      setLocation(posX, posY);
+                      if (frameX > 256) {
+                          frameX = 5;
+                      }
+                      repaint();
+                  }
+                  else {
+                      posX -= speed;
+                      frameX += xStep;
 
-                   if (frameX>1024){
-                       frameX=164;
-                   }
-                   repaint();
+                      setLocation(posX, posY);
+                      if (frameX > 256) {
+                          frameX = 5;
+                      }
+                      repaint();
+                  }
 
-                   if (Touch.isTouching(getX()+getWidth()/2,getY()+getHeight()/2,
-                           UI.anotherHero.getX()+UI.anotherHero.getWidth()/2,UI.anotherHero.getY()+UI.anotherHero.getHeight()/2,
-                           50)){
-                       System.out.println("Lovely Jably");
-                   }
+//                   if (Touch.isTouching(getX() + getWidth() / 2, getY() + getHeight() / 2,
+//                           UI.anotherHero.getX() + UI.anotherHero.getWidth() / 2, UI.anotherHero.getY() + UI.anotherHero.getHeight() / 2,
+//                           50)) {
+//                       System.out.println("Lovely Jably");
+//                   }
 
 
                } catch (InterruptedException e) {
@@ -168,4 +215,34 @@ public class Hero extends JLabel {
     }
 
 
+
+    public class InnerThread extends Thread{
+        @Override
+        public void run() {
+            super.run();
+            try {
+                if (!isBack) {
+                    sleep(25);
+                    for (int i = 0; i < Inner.length; i++) {
+                        posX += Inner[i];
+                        setLocation(posX, posY);
+                        sleep(25);
+                    }
+                }
+                else {
+                    sleep(25);
+                    for (int i = 0; i < Inner.length; i++) {
+                        posX -= Inner[i];
+                        setLocation(posX, posY);
+                        sleep(25);
+                    }
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 }
+
+

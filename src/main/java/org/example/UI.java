@@ -10,16 +10,12 @@ public class UI extends JFrame implements MouseListener, KeyListener {
     static AnotherHero anotherHero = new AnotherHero();
 
 
-
-    int anotherHeroX = anotherHero.getX() + anotherHero.getWidth() / 2;
-    int anotherHeroY = anotherHero.getY() + anotherHero.getHeight() / 2;
-
      UI() {
          setLayout(null);
          setPreferredSize(new Dimension(600, 600));
          setBackground(Color.WHITE);
 
-         hero.setBounds(100,400,140, 170);
+         hero.setBounds(100,400,70, 85);
          anotherHero.setBounds(400,400,100,120);
 
          addMouseListener(this);
@@ -29,7 +25,7 @@ public class UI extends JFrame implements MouseListener, KeyListener {
 
 
          add(hero);
-         add(anotherHero);
+     //    add(anotherHero);
 
          pack();
          setVisible(true);
@@ -42,15 +38,15 @@ public class UI extends JFrame implements MouseListener, KeyListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        int button = e.getButton();
-        if (button == 1){
-            hero.defenceAnimation();
-        }
+//        int button = e.getButton();
+//        if (button == 1){
+//            hero.defenceAnimation();
+//        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-         hero.idleAnimation();
+//         hero.idleAnimation();
     }
 
 
@@ -65,11 +61,13 @@ public class UI extends JFrame implements MouseListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         char button = e.getKeyChar();
-        if (button == 'w'){
-            hero.walkAnimation();
+        if (button == 'd'){
+            hero.walkAnimationRight();
+        }
+        if (button == 'a'){
+            hero.walkAnimationLeft();
         }
         if (e.isShiftDown()){
-            System.out.println("123");
             hero.runAnimation();
         }
     }
@@ -79,10 +77,14 @@ public class UI extends JFrame implements MouseListener, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         char button = e.getKeyChar();
-         if (button == 'w'){
+         if (button == 'd'){
              hero.idleAnimation();
              hero.stopWalkAnimation();
          }
+        if (button == 'a'){
+            hero.idleAnimation();
+            hero.stopWalkAnimation();
+        }
          if (isWalk && e.getKeyCode() == KeyEvent.VK_SHIFT){
              hero.stopRunningAnimation();
          }

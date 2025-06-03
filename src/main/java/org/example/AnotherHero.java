@@ -10,14 +10,14 @@ public class AnotherHero extends JLabel {
     ImageIcon tempImage;
 
     // cords WH
-   static int frameX = 6;
-   static int frameY = 6;
+   static int frameX = 158;
+   static int frameY = 35;
     // WH img what i am upload
-   static int frameWidth = 17;
-   static int frameHeight = 22;
+   static int frameWidth = 46;
+   static int frameHeight = 85;
 
     AnotherHero(){
-        tempImage = new ImageIcon("src/main/resources/textures/knight.png");
+        tempImage = new ImageIcon("src/main/resources/textures/original-d1e95a0c9c33c0f65821c2e7aa6c22d7.jpg");
         hero = toBufferedImage(tempImage);
 
         setPreferredSize(new Dimension(140, 170));
