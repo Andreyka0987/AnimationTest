@@ -4,11 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import static java.lang.Thread.sleep;
+
 public class UI extends JFrame implements MouseListener, KeyListener {
     Hero hero = new Hero();
     static boolean isWalk = false;
     static AnotherHero anotherHero = new AnotherHero();
-
+    boolean jumpCheck = true;
+    static boolean isJump = false;
 
      UI() {
          setLayout(null);
@@ -16,7 +19,7 @@ public class UI extends JFrame implements MouseListener, KeyListener {
          setBackground(Color.WHITE);
 
          hero.setBounds(100,400,70, 85);
-         anotherHero.setBounds(400,400,100,120);
+         anotherHero.setBounds(400,425,50,60);
 
          addMouseListener(this);
          addKeyListener(this);
@@ -25,7 +28,9 @@ public class UI extends JFrame implements MouseListener, KeyListener {
 
 
          add(hero);
-     //    add(anotherHero);
+         add(anotherHero);
+
+         anotherHero.idleAnimation();
 
          pack();
          setVisible(true);
@@ -61,6 +66,15 @@ public class UI extends JFrame implements MouseListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         char button = e.getKeyChar();
+
+
+        if (e.getKeyCode() == KeyEvent.VK_SPACE){
+            if (jumpCheck) {
+                    hero.jumpFunction();
+                    jumpCheck = false;
+                    System.out.println("123");
+            }
+        }
         if (button == 'd'){
             hero.walkAnimationRight();
         }
@@ -88,5 +102,7 @@ public class UI extends JFrame implements MouseListener, KeyListener {
          if (isWalk && e.getKeyCode() == KeyEvent.VK_SHIFT){
              hero.stopRunningAnimation();
          }
+         if (!jumpCheck && e.getKeyCode() == KeyEvent.VK_SPACE){}
+            jumpCheck = true;
     }
 }

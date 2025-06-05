@@ -8,9 +8,11 @@ import java.awt.image.BufferedImage;
 public class Hero extends JLabel {
     MyThread walkThread = null;
 
-    int[] Inner =
+    int[] inner =
             {1,2,3,
             4,5,6};
+    int[] jumpArr = {1,2,3,5,7,8,10,12,
+                  -1,-2,-3,-5,-7,-8,-10,-12};
 
     BufferedImage idle;
     BufferedImage hero;
@@ -28,8 +30,8 @@ public class Hero extends JLabel {
 
     int speed = 10;
 
-    int posX = 100;
-    int posY = 400;
+   static int posX = 100;
+   static int posY = 400;
 
     boolean isBack = false;
 
@@ -165,7 +167,12 @@ public class Hero extends JLabel {
         }
     }
 
+    public void jumpFunction(){
+        UI.isJump = true;
+            JumpThread jumpThread = new JumpThread();
+            jumpThread.start();
 
+    }
 
 
 
@@ -198,41 +205,33 @@ public class Hero extends JLabel {
                       }
                       repaint();
                   }
-
 //                   if (Touch.isTouching(getX() + getWidth() / 2, getY() + getHeight() / 2,
 //                           UI.anotherHero.getX() + UI.anotherHero.getWidth() / 2, UI.anotherHero.getY() + UI.anotherHero.getHeight() / 2,
 //                           50)) {
 //                       System.out.println("Lovely Jably");
 //                   }
-
-
                } catch (InterruptedException e) {
-
                    return;
                }
            }
        }
     }
-
-
-
-    public class InnerThread extends Thread{
+    public class InnerThread extends Thread {
         @Override
         public void run() {
             super.run();
             try {
                 if (!isBack) {
                     sleep(25);
-                    for (int i = 0; i < Inner.length; i++) {
-                        posX += Inner[i];
+                    for (int i = 0; i < inner.length; i++) {
+                        posX += inner[i];
                         setLocation(posX, posY);
                         sleep(25);
                     }
-                }
-                else {
+                } else {
                     sleep(25);
-                    for (int i = 0; i < Inner.length; i++) {
-                        posX -= Inner[i];
+                    for (int i = 0; i < inner.length; i++) {
+                        posX -= inner[i];
                         setLocation(posX, posY);
                         sleep(25);
                     }
@@ -242,6 +241,32 @@ public class Hero extends JLabel {
             }
         }
     }
+
+    double jumpY;
+    public class JumpThread extends Thread {
+        @Override
+        public void run() {
+            super.run();
+
+            try {
+                sleep(25);
+                for (int i = 0; i<jumpArr.length;i++){
+                    posY-=jumpArr[i];
+                    setLocation(posX,posY);
+                    sleep(25);
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+
+
+
+        }
+    }
+
+
+
 
 }
 

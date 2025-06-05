@@ -2,6 +2,7 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public class AnotherHero extends JLabel {
@@ -10,14 +11,16 @@ public class AnotherHero extends JLabel {
     ImageIcon tempImage;
 
     // cords WH
-   static int frameX = 158;
-   static int frameY = 35;
+   static int frameX = 4;
+   static int frameY = 34;
     // WH img what i am upload
-   static int frameWidth = 46;
-   static int frameHeight = 85;
+   static int frameWidth = 16;
+   static int frameHeight = 14;
 
+   boolean isHeroInSight = false;
+   boolean totalPOV;
     AnotherHero(){
-        tempImage = new ImageIcon("src/main/resources/textures/original-d1e95a0c9c33c0f65821c2e7aa6c22d7.jpg");
+        tempImage = new ImageIcon("src/main/resources/textures/slime_green.png");
         hero = toBufferedImage(tempImage);
 
         setPreferredSize(new Dimension(140, 170));
@@ -29,9 +32,11 @@ public class AnotherHero extends JLabel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        totalPOV = checkViewPoint();
         idle = hero.getSubimage(frameX, frameY, frameWidth, frameHeight);
         if (idle != null) {
-            g.drawImage(idle, 0,0 , getWidth(), getHeight(), null);
+            BufferedImage imageToDraw = totalPOV ? flipImageHorizontally(idle) : idle;
+            g.drawImage(imageToDraw, 0,0 , getWidth(), getHeight(), null);
         }
     }
 
@@ -49,5 +54,64 @@ public class AnotherHero extends JLabel {
 
         return bufferedImage;
     }
+
+    public BufferedImage flipImageHorizontally(BufferedImage image) {
+        BufferedImage flipped = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = flipped.createGraphics();
+
+        g.transform(AffineTransform.getScaleInstance(-1, 1));
+        g.drawImage(image, -image.getWidth(), 0, null);
+
+        g.dispose();
+        return flipped;
+    }
+
+
+    public void idleAnimation(){
+        frameX = 4;
+        frameY = 33;
+        frameWidth = 16;
+        frameHeight = 15;
+        IdleThread idleThread = new IdleThread();
+        idleThread.start();
+        repaint();
+    }
+
+    public boolean checkViewPoint(){
+        if (Hero.posX<getX()){
+            isHeroInSight = true;
+        }
+        else {
+            isHeroInSight = false;
+        }
+        return isHeroInSight;
+    }
+
+
+    public class IdleThread extends Thread{
+        @Override
+        public void run() {
+            super.run();
+            while (true) {
+                try {
+
+
+                        frameX += 24;
+                        repaint();
+
+                        if (frameX > 96) {
+                            frameX = 4;
+                        }
+
+
+                        repaint();
+                        sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
 
 }
