@@ -41,8 +41,6 @@ public class Hero extends JLabel {
 
         setPreferredSize(new Dimension(140, 170));
 
-//        MyThread myThread = new MyThread();
-//        myThread.start();
     }
 
     @Override

@@ -3,23 +3,34 @@ package org.example;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 import static java.lang.Thread.sleep;
 
-public class UI extends JFrame implements MouseListener, KeyListener {
+public class UI extends JFrame implements MouseListener, KeyListener, ActionListener {
     Hero hero = new Hero();
     static boolean isWalk = false;
     static AnotherHero anotherHero = new AnotherHero();
     boolean jumpCheck = true;
     static boolean isJump = false;
+    JButton jButton = new JButton();
+
+    JBack jBack = new JBack();
 
      UI() {
          setLayout(null);
          setPreferredSize(new Dimension(600, 600));
          setBackground(Color.WHITE);
+         setResizable(false);
+
 
          hero.setBounds(100,400,70, 85);
          anotherHero.setBounds(400,425,50,60);
+
+
+         jButton.setBounds(530,15,44,44);
+         jButton.setText("⚙");
+         jButton.addActionListener(this);
 
          addMouseListener(this);
          addKeyListener(this);
@@ -27,6 +38,9 @@ public class UI extends JFrame implements MouseListener, KeyListener {
          requestFocusInWindow();
 
 
+        setContentPane(jBack);
+
+         add(jButton);
          add(hero);
          add(anotherHero);
 
@@ -36,7 +50,6 @@ public class UI extends JFrame implements MouseListener, KeyListener {
          setVisible(true);
 
     }
-
 
     @Override
     public void mouseClicked(MouseEvent e) {}
@@ -77,6 +90,7 @@ public class UI extends JFrame implements MouseListener, KeyListener {
         }
         if (button == 'd'){
             hero.walkAnimationRight();
+            jBack.walkAnimationRight();
         }
         if (button == 'a'){
             hero.walkAnimationLeft();
@@ -104,5 +118,13 @@ public class UI extends JFrame implements MouseListener, KeyListener {
          }
          if (!jumpCheck && e.getKeyCode() == KeyEvent.VK_SPACE){}
             jumpCheck = true;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String button = e.getActionCommand();
+        if (button.equals("⚙")){
+            new Settings();
+        }
     }
 }
