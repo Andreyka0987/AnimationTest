@@ -9,19 +9,22 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Settings extends JFrame implements ActionListener {
+public class Settings extends JDialog implements ActionListener {
     JRadioButton musicJRadio = new JRadioButton();
     Clip clip;
     SettingsBackGround backGround = new SettingsBackGround();
+    UI ui;
 
-    Settings()  {
+    Settings(UI ui)  {
+        super(ui, "Settings", true);
+
+        this.ui = ui;
         setLayout(null);
         setPreferredSize(new Dimension(250, 200));
         backGround.setBounds(0,0,250,170);
         backGround.setLayout(null);
         add(backGround);
         setResizable(false);
-
 
 
 
@@ -35,7 +38,6 @@ public class Settings extends JFrame implements ActionListener {
         musicJRadio.addActionListener(this);
         musicJRadio.setText("Music");
         musicJRadio.setForeground(Color.WHITE);
-
         backGround.add(musicJRadio);
 
         pack();

@@ -20,23 +20,24 @@ public class Hero extends JLabel {
      int xStep = 32;
 
      // cords WH
-    static int frameX = 6;
-    static int frameY = 6;
+    static int frameX = 622;
+    static int frameY = 142;
      // WH img what i am upload
-    static int frameWidth = 17;
-    static int frameHeight = 22;
+    static int frameWidth = 641;
+    static int frameHeight = 1000;
 
     int countInner = 0;
 
     int speed = 10;
 
-   static int posX = 100;
-   static int posY = 400;
+   static int posX = 260;  //680
+   static int posY = 450;
 
-    boolean isBack = false;
+    boolean isBackAnimation = false;
+    boolean isPoint = false;
 
     Hero() {
-        tempImage = new ImageIcon("src/main/resources/textures/knight.png");
+        tempImage = new ImageIcon("src/main/resources/textures/MaxVerstappenAsset.png");
         hero = toBufferedImage(tempImage);
 
         setPreferredSize(new Dimension(140, 170));
@@ -48,7 +49,7 @@ public class Hero extends JLabel {
         super.paintComponent(g);
         idle = hero.getSubimage(frameX, frameY, frameWidth, frameHeight);
         if (idle != null) {
-            BufferedImage imageToDraw = isBack ? flipImageHorizontally(idle) : idle;
+            BufferedImage imageToDraw = isBackAnimation ? flipImageHorizontally(idle) : idle;
                 g.drawImage(imageToDraw, 0, 0, getWidth(), getHeight(), null);
 
 
@@ -99,31 +100,24 @@ public class Hero extends JLabel {
 
     boolean isStanding = true;
     public void idleAnimation(){
-
-
-
         frameX = 5;
         frameY = 6;
         frameWidth = 17;
         frameHeight = 22;
         isStanding = true;
-
-
         repaint();
     }
 
     public void walkAnimationRight(){
         if (walkThread != null)return;
         walkThread = new MyThread();
-
-            frameX = 5;
-            frameY = 71;
-            frameWidth = 18;
-            frameHeight = 21;
+         frameX = 622;
+         frameY = 142;
+         frameWidth = 641;
+         frameHeight = 1000;
+            isPoint = false;
             UI.isWalk = true;
-            isBack = false;
             walkThread.start();
-
     }
 
 
@@ -131,12 +125,12 @@ public class Hero extends JLabel {
         if (walkThread != null)return;
         walkThread = new MyThread();
 
-        frameX = 5;
-        frameY = 71;
-        frameWidth = 18;
-        frameHeight = 21;
+        frameX = 622;
+        frameY = 142;
+        frameWidth = 641;
+        frameHeight = 1000;
+        isPoint = true;
         UI.isWalk = true;
-        isBack = true;
         walkThread.start();
         repaint();
     }
@@ -172,7 +166,15 @@ public class Hero extends JLabel {
 
     }
 
+    public void driveFunc(){
+         frameX = 622;
+         frameY = 142;
+         frameWidth = 641;
+         frameHeight = 940;
+         MyThread myThread = new MyThread();
+         myThread.start();
 
+    }
 
 
    public class MyThread extends Thread{
@@ -181,26 +183,15 @@ public class Hero extends JLabel {
            super.run();
            while (UI.isWalk) {
                try {
-                   sleep(75);
-
-                  if (!isBack) {
-                      posX += speed;
-                      frameX += xStep;
-
+                   sleep(15);
+                  if (!isPoint) {
+                      posX -= speed;
                       setLocation(posX, posY);
-                      if (frameX > 256) {
-                          frameX = 5;
-                      }
                       repaint();
                   }
                   else {
-                      posX -= speed;
-                      frameX += xStep;
-
+                      posX += speed;
                       setLocation(posX, posY);
-                      if (frameX > 256) {
-                          frameX = 5;
-                      }
                       repaint();
                   }
 //                   if (Touch.isTouching(getX() + getWidth() / 2, getY() + getHeight() / 2,
@@ -219,7 +210,7 @@ public class Hero extends JLabel {
         public void run() {
             super.run();
             try {
-                if (!isBack) {
+                if (!isPoint) {
                     sleep(25);
                     for (int i = 0; i < inner.length; i++) {
                         posX += inner[i];
