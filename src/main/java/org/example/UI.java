@@ -41,9 +41,9 @@ public class UI extends JFrame implements KeyListener, ActionListener, MouseList
 
     static TurnThread turnThread;
 
-    static int timerDelay = 20000;
+    static int timerDelay = 10000;
 
-    static int position = 20;
+    static int position = 5;
 
     static boolean isWinner = false;
 
@@ -304,11 +304,11 @@ public class UI extends JFrame implements KeyListener, ActionListener, MouseList
 
             if (isWinner){
                 hero.hide();
-                anotherHero.pause();
                 anotherHero.hide();
-                points.hide();
-                turn.hide();
-                setContentPane(winnerPanel);
+                anotherHero.pause();
+                winnerPanel.setBounds(0,0,1000,940);
+                add(winnerPanel);
+
                 try {
                     sleep(5000);
                 } catch (InterruptedException e) {
